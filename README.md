@@ -1,5 +1,6 @@
 **ALL Credit goes to ttmcmurry from https://forum.netgate.com/**
-**Source** https://forum.netgate.com/topic/153288/multiple-ipv6-prefix-delegation-over-at-t-residential-gateway-for-pfsense-2-4-5 
+
+**Source:** https://forum.netgate.com/topic/153288/multiple-ipv6-prefix-delegation-over-at-t-residential-gateway-for-pfsense-2-4-5 
 
 
 Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense 2.4.5 
@@ -184,3 +185,19 @@ id-assoc pd 0 {
 	- Test a client in each configured, connected network 
 
 
+
+**State Limits**
+
+
+AT&T Residential gateways have a state table that is far smaller than pfSense's defaults, which can result in problems once the RG begins tracking more states than available. pfSense should be set to never go above that limit. pfSense will adjust how states are managed based on its default adaptive algorithm from "Firewall Adaptive Timeouts." There is no need to adjust pfSense default Adaptive Timeout behavior, only the maximum number of states pfSesnse can use.
+
+The values below are from known hardware & firmware capabilities. Depending on the # of devices directly plugged into the RG, like U-Verse set-top-boxes and devices NOT behind pfSense, you may need to adjust pfSense's maximum states downward. This information can be found on the RG under Settings -> Diagnostics -> NAT.
+
+Pace 5268AC Firmware v11.5.1.532678-att - 15460 states max - Set pfSense to 15000 states
+Arris NVG599 - Firmware v9.2.2h0d79 - 4096 states max - Set pfSense to 3500 states
+Arris BGW210-700 - Firmware 1.9.16 - 8000 states max - Set pfSense to 7500 states
+Motorola NVG589 - Firmware ? - 8192 states max - Set pfSense to 7600 states
+
+Set the pfSense state limit in Advanced -> Firewall & NAT -> Firewall Maximum States
+
+Note: If anyone has more up-to-date information about RG firmware and state capabilities, let me know and I'll update this table.
