@@ -181,7 +181,7 @@ id-assoc pd 0 {
 
 	- DHCPv6 Server & RA -> DHCPv6 Server -> Enable -> Save 
 
-	- DHCPv6 Server & RA -> Router Advertisements -> Router Mode -> Assisted (Default) 
+	- DHCPv6 Server & RA -> Router Advertisements -> Router Mode -> Managed 
 
 	- Test a client in each configured, connected network 
 
