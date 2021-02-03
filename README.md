@@ -3,9 +3,9 @@
 **Source:** https://forum.netgate.com/topic/153288/multiple-ipv6-prefix-delegation-over-at-t-residential-gateway-for-pfsense-2-4-5 
 
 
-Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense 2.4.5 
+**Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense 2.4.5** 
 
-I've been working on this one for a while. This is the result of others posting their work across various forums, reading BSD docs, and plenty of testing as a result of needing something to do while being stuck at home. :) 
+I've (ttmcmurry) been working on this one for a while. This is the result of others posting their work across various forums, reading BSD docs, and plenty of testing as a result of needing something to do while being stuck at home. :) 
 
 The purpose of this is to make it easier for AT&T customers who wish to assign more than one IPv6 prefix delegation inside their pfSense firewall to more than one internal network interface. I am providing an example dhcp.conf script and explaining what's needed step-by-step. AT&T customers must have been furnished a Residential Gateway (Pace 5268AC / Arris BGW210-700, possibly others) and have configured the RG in DMZ+/IP Passthrough mode. This has been written with pfSense 2.4.5 in mind. 
 
@@ -120,7 +120,8 @@ id-assoc pd 0 {
 
 	Look at Interfaces -> Assignments -> Network Port for the adapter associated to each LAN/OPT interface(s) 
 
-	Replace the prefix-interface "hn1" with LAN/OPT adapter network port name 
+	Replace the prefix-interface *LANINTERFACEX* with LAN/OPT adapter network port name 
+		[Uncomment Stanzas if you need more than one interface.]
 
 	If using VLANs, remember to use numerical subinterface number e.g. hn0.10 for VLAN 10 
 
