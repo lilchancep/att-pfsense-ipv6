@@ -48,61 +48,19 @@ interface *WANInterface* {
 };
 id-assoc na 0 { };
 id-assoc pd 0 {
-	prefix-interface *LANInterface1* {
+	prefix-interface *LANInterface* {
 		sla-id 0;
 		sla-len 0;
 	};
 };
 
-#id-assoc pd 1 {
-#	prefix-interface *LANInterface2* {
-#		sla-id 0;
-#		sla-len 0;
-#	};
-#};
-
-#id-assoc pd 2 {
-#	prefix-interface *LANInterface3* {
-#		sla-id 0;
-#		sla-len 0;
-#	};
-#};
-
-#id-assoc pd 3 {
-#	prefix-interface *LANInterface4* {
-#		sla-id 0;
-#		sla-len 0;
-#	};
-#};
-
-#id-assoc pd 4 {
-#	prefix-interface *LANInterface5* {
-#		sla-id 0;
-#		sla-len 0;
-#	};
-#};
-
-#id-assoc pd 5 {
-#	prefix-interface *LANInterface6* {
-#		sla-id 0;
-#		sla-len 0;
-#	};
-#};
-
-#id-assoc pd 6 {
-#	prefix-interface *LANInterface7* {
-#		sla-id 0;
-#		sla-len 0;
-#	};
-#};
-
-#id-assoc pd 7 {
-#	prefix-interface *LANInterface8* {
-#		sla-id 0;
-#		sla-len 0;
-#	};
-#};
-
+id-assoc pd 1 { };
+id-assoc pd 2 { };
+id-assoc pd 3 { };
+id-assoc pd 4 { };
+id-assoc pd 5 { };
+id-assoc pd 6 { };
+id-assoc pd 7 { };
 
 ``` 
 
