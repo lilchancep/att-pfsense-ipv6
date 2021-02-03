@@ -1,4 +1,6 @@
-# att-pfsense-ipv6
+**ALL Credit goes to ttmcmurry from https://forum.netgate.com/**
+
+
 Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense 2.4.5 
 
 I've been working on this one for a while. This is the result of others posting their work across various forums, reading BSD docs, and plenty of testing as a result of needing something to do while being stuck at home. :) 
