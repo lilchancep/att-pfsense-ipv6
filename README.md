@@ -47,32 +47,75 @@ interface *WANInterface* {
 };
 id-assoc na 0 { };
 id-assoc pd 0 {
-	prefix-interface hn1 {
+	prefix-interface *LANInterface1* {
 		sla-id 0;
 		sla-len 0;
 	};
 };
-id-assoc pd 1 { };
-id-assoc pd 2 { };
-id-assoc pd 3 { };
-id-assoc pd 4 { };
-id-assoc pd 5 { };
-id-assoc pd 6 { };
-id-assoc pd 7 { };
+
+#id-assoc pd 1 {
+#	prefix-interface *LANInterface2* {
+#		sla-id 0;
+#		sla-len 0;
+#	};
+#};
+
+#id-assoc pd 2 {
+#	prefix-interface *LANInterface3* {
+#		sla-id 0;
+#		sla-len 0;
+#	};
+#};
+
+#id-assoc pd 3 {
+#	prefix-interface *LANInterface4* {
+#		sla-id 0;
+#		sla-len 0;
+#	};
+#};
+
+#id-assoc pd 4 {
+#	prefix-interface *LANInterface5* {
+#		sla-id 0;
+#		sla-len 0;
+#	};
+#};
+
+#id-assoc pd 5 {
+#	prefix-interface *LANInterface6* {
+#		sla-id 0;
+#		sla-len 0;
+#	};
+#};
+
+#id-assoc pd 6 {
+#	prefix-interface *LANInterface7* {
+#		sla-id 0;
+#		sla-len 0;
+#	};
+#};
+
+#id-assoc pd 7 {
+#	prefix-interface *LANInterface8* {
+#		sla-id 0;
+#		sla-len 0;
+#	};
+#};
+
 
 ``` 
 
-**2. Update the "interface" stanza 
+**2. Update the "interface" stanza (Line 1)**
 
 	- Look at Interfaces -> Assignments -> Network Port for the adapter associated to the WAN interface 
 
-	- Replace the adapter in the interface stanza below with the WAN adapter network port name below, e.g. hn0, igb0, vmx0, eth0, etc 
+	- Replace the *WANInterface* in the interface stanza (Line 1) below with the WAN adapter network port name below, e.g. hn0, igb0, vmx0, eth0, etc 
 
 	- If using VLANs, remember to use numerical subinterface number e.g. hn0.10 for VLAN 10 
 
 	- IA-NA Note: The IA-NA is an arbitrary number. A unique number must be chosen for each device connected to the AT&T residential gateway (RG) which will request a prefix 	delegation from the RG. If only one device will be requesting PDs from the RG (i.e. this pfSense firewall), then "ia-na 0" is fine. 
 
-**3. Update the "ia-pd" stanzas 
+**3. Update the "ia-pd" stanzas**
 
 	Look at Interfaces -> Assignments -> Network Port for the adapter associated to each LAN/OPT interface(s) 
 
@@ -100,7 +143,7 @@ id-assoc pd 7 { };
 	Arris BGW210-700 first assigns 8 then increments to F to PD 0-7, i.e. PD0 = ::xxx8::/64 
 
 
-**4. Add the script to pfSense 
+**4. Add the script to pfSense**
 
 	- Create this file on pfSense under Diagnostics -> Edit File 
 
@@ -110,7 +153,7 @@ id-assoc pd 7 { };
 
 	- Click on Save 
 
-**5. Edit the WAN interface 
+**5. Edit the WAN interface**
 
 	- Set IPv6 Configuration Type to "DHCP6" (it may already be set, see "assumptions" above) 
 
@@ -130,7 +173,7 @@ id-assoc pd 7 { };
 
 	- Click on Save and Apply the changes 
 
-6. Enable pfSense DHCPv6 Server & Test 
+**6. Enable pfSense DHCPv6 Server & Test**
 
 	- For each configured interface.. 
 
