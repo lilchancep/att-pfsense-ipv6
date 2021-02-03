@@ -28,7 +28,7 @@ Once this script is in place, if you need to reassign interfaces & prefix delega
 
 6. DHCPv6 Server & RA -> Router Advertisements -> Defaults (Router Mode: Assisted) 
 
-** Steps: ** 
+**Steps:** 
 1. Make a local copy of the code below 
 ```
 interface *WANInterface* {
@@ -62,17 +62,17 @@ id-assoc pd 7 { };
 
 ``` 
 
-2. Update the "interface" stanza 
+**2. Update the "interface" stanza 
 
-	Look at Interfaces -> Assignments -> Network Port for the adapter associated to the WAN interface 
+	- Look at Interfaces -> Assignments -> Network Port for the adapter associated to the WAN interface 
 
-	Replace the adapter in the interface stanza below with the WAN adapter network port name below, e.g. hn0, igb0, vmx0, eth0, etc 
+	- Replace the adapter in the interface stanza below with the WAN adapter network port name below, e.g. hn0, igb0, vmx0, eth0, etc 
 
-	If using VLANs, remember to use numerical subinterface number e.g. hn0.10 for VLAN 10 
+	- If using VLANs, remember to use numerical subinterface number e.g. hn0.10 for VLAN 10 
 
-	IA-NA Note: The IA-NA is an arbitrary number. A unique number must be chosen for each device connected to the AT&T residential gateway (RG) which will request a prefix 	delegation from the RG. If only one device will be requesting PDs from the RG (i.e. this pfSense firewall), then "ia-na 0" is fine. 
+	- IA-NA Note: The IA-NA is an arbitrary number. A unique number must be chosen for each device connected to the AT&T residential gateway (RG) which will request a prefix 	delegation from the RG. If only one device will be requesting PDs from the RG (i.e. this pfSense firewall), then "ia-na 0" is fine. 
 
-3. Update the "ia-pd" stanzas 
+**3. Update the "ia-pd" stanzas 
 
 	Look at Interfaces -> Assignments -> Network Port for the adapter associated to each LAN/OPT interface(s) 
 
@@ -100,44 +100,44 @@ id-assoc pd 7 { };
 	Arris BGW210-700 first assigns 8 then increments to F to PD 0-7, i.e. PD0 = ::xxx8::/64 
 
 
-4. Add the script to pfSense 
+**4. Add the script to pfSense 
 
-	Create this file on pfSense under Diagnostics -> Edit File 
+	- Create this file on pfSense under Diagnostics -> Edit File 
 
-	Copy and paste your edited script into the text window 
+	- Copy and paste your edited script into the text window 
 
-	In the grey filename box, enter /usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf 
+	- In the grey filename box, enter /usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf 
 
-	Click on Save 
+	- Click on Save 
 
-5. Edit the WAN interface 
+**5. Edit the WAN interface 
 
-	Set IPv6 Configuration Type to "DHCP6" (it may already be set, see "assumptions" above) 
+	- Set IPv6 Configuration Type to "DHCP6" (it may already be set, see "assumptions" above) 
 
-	Under DHCP6 client configuration, select Configuration Override 
+	- Under DHCP6 client configuration, select Configuration Override 
 
-	Enter the following in Configuration File Override: /usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf 
+	- Enter the following in Configuration File Override: /usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf 
 
-	Click on Save and Apply the changes 
+	- Click on Save and Apply the changes 
 
-	Step five: Edit the LAN/OPT interface(s), one at a time 
+	- Step five: Edit the LAN/OPT interface(s), one at a time 
 
-	Set the IPv6 Configuration Type to "Track Interface" 
+	- Set the IPv6 Configuration Type to "Track Interface" 
 
-	Set the Track IPv6 Interface -> IPv6 Interface to the WAN's interface name ("WAN" is the default name) 
+	- Set the Track IPv6 Interface -> IPv6 Interface to the WAN's interface name ("WAN" is the default name) 
 
-	Set the IPv6 Prefix ID to the PD number configured in the .conf file 
+	- Set the IPv6 Prefix ID to the PD number configured in the .conf file 
 
-	Click on Save and Apply the changes 
+	- Click on Save and Apply the changes 
 
 6. Enable pfSense DHCPv6 Server & Test 
 
-	For each configured interface.. 
+	- For each configured interface.. 
 
-	DHCPv6 Server & RA -> DHCPv6 Server -> Enable -> Save 
+	- DHCPv6 Server & RA -> DHCPv6 Server -> Enable -> Save 
 
-	DHCPv6 Server & RA -> Router Advertisements -> Router Mode -> Assisted (Default) 
+	- DHCPv6 Server & RA -> Router Advertisements -> Router Mode -> Assisted (Default) 
 
-	Test a client in each configured, connected network 
+	- Test a client in each configured, connected network 
 
 
