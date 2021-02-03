@@ -15,7 +15,7 @@ I welcome improvements and feedback and will be happy to update this to help mak
 
 Once this script is in place, if you need to reassign interfaces & prefix delegations, the script has to be updated. You will need to edit the IPv6 Track Interface Prefix ID on the LAN/OPT interfaces with the IA-PD you specify in the .conf file. 
 
-**Assumptions:**
+# Assumptions
 
 1. The WAN interface IPv6 Configuration type is configured for "none" or, 
 
@@ -29,8 +29,8 @@ Once this script is in place, if you need to reassign interfaces & prefix delega
 
 6. DHCPv6 Server & RA -> Router Advertisements -> Defaults (Router Mode: Assisted) 
 
-**Steps:** 
-1. Make a local copy of the code below 
+# Steps 
+### 1. Make a local copy of the code below 
 ```
 interface *WANInterface* {
 	send ia-na 0;
@@ -63,7 +63,7 @@ id-assoc pd 7 { };
 
 ``` 
 
-**2. Update the "interface" stanza (Line 1)**
+### 2. Update the "interface" stanza (Line 1)
 
 	- Look at Interfaces -> Assignments -> Network Port for the adapter associated to the WAN interface 
 
@@ -73,7 +73,7 @@ id-assoc pd 7 { };
 
 	- IA-NA Note: The IA-NA is an arbitrary number. A unique number must be chosen for each device connected to the AT&T residential gateway (RG) which will request a prefix 	delegation from the RG. If only one device will be requesting PDs from the RG (i.e. this pfSense firewall), then "ia-na 0" is fine. 
 
-**3. Update the "ia-pd" stanzas**
+### 3. Update the "ia-pd" stanzas
 
 	Look at Interfaces -> Assignments -> Network Port for the adapter associated to each LAN/OPT interface(s) 
 
@@ -102,7 +102,7 @@ id-assoc pd 7 { };
 	Arris BGW210-700 first assigns 8 then increments to F to PD 0-7, i.e. PD0 = ::xxx8::/64 
 
 
-**4. Add the script to pfSense**
+### 4. Add the script to pfSense
 
 	- Create this file on pfSense under Diagnostics -> Edit File 
 
@@ -112,9 +112,11 @@ id-assoc pd 7 { };
 
 	- Click on Save 
 
-**5. Edit the WAN interface**
+### 5. Edit the WAN interface
 
 	- Set IPv6 Configuration Type to "DHCP6" (it may already be set, see "assumptions" above) 
+
+	- Under DHCP6 client configuration, change DHCPv6 Prefix Delegation size from 64 to 60
 
 	- Under DHCP6 client configuration, select Configuration Override 
 
@@ -132,7 +134,7 @@ id-assoc pd 7 { };
 
 	- Click on Save and Apply the changes 
 
-**6. Enable pfSense DHCPv6 Server & Test**
+### 6. Enable pfSense DHCPv6 Server & Test
 
 	- For each configured interface.. 
 
@@ -144,7 +146,7 @@ id-assoc pd 7 { };
 
 
 
-**State Limits**
+# State Limits
 
 
 AT&T Residential gateways have a state table that is far smaller than pfSense's defaults, which can result in problems once the RG begins tracking more states than available. pfSense should be set to never go above that limit. pfSense will adjust how states are managed based on its default adaptive algorithm from "Firewall Adaptive Timeouts." There is no need to adjust pfSense default Adaptive Timeout behavior, only the maximum number of states pfSesnse can use.
