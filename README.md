@@ -44,7 +44,7 @@ interface *WANInterface* {
 	send ia-pd 7;
 	request domain-name-servers;
 	request domain-name;
-	script "/var/etc/dhcp6c_wan_dhcp6withoutra_script.sh";
+	script "/var/etc/dhcp6c_wan_script.sh";
 };
 id-assoc na 0 { };
 id-assoc pd 0 {
