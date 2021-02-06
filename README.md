@@ -124,7 +124,7 @@ id-assoc pd 7 { };
 
 	- Click on Save and Apply the changes 
 
-	- Step five: Edit the LAN/OPT interface(s), one at a time 
+### 6. Edit the LAN/OPT interface(s), one at a time 
 
 	- Set the IPv6 Configuration Type to "Track Interface" 
 
@@ -134,7 +134,7 @@ id-assoc pd 7 { };
 
 	- Click on Save and Apply the changes 
 
-### 6. Enable pfSense DHCPv6 Server & Test
+### 7. Enable pfSense DHCPv6 Server & Test
 
 	- For each configured interface.. 
 
