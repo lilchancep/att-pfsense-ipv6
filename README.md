@@ -3,7 +3,11 @@
 **Source:** https://forum.netgate.com/topic/153288/multiple-ipv6-prefix-delegation-over-at-t-residential-gateway-for-pfsense-2-4-5 
 
 
-**Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense 2.4.5** 
+**Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense** 
+
+Compatible Versions
+
+2.4.5, 2.5.0
 
 I've (ttmcmurry) been working on this one for a while. This is the result of others posting their work across various forums, reading BSD docs, and plenty of testing as a result of needing something to do while being stuck at home. :) 
 
