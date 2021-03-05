@@ -112,7 +112,8 @@ id-assoc pd 7 { };
 
 	- Copy and paste your edited script into the text window 
 
-	- In the grey filename box, enter /usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf 
+	- In the grey filename box, enter /usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf
+		-Ensure there is no trailing space in the filename.
 
 	- Click on Save 
 
