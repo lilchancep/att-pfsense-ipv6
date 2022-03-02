@@ -7,7 +7,7 @@
 
 Compatible Versions
 
-2.4.5, 2.5.0
+2.4.5, 2.5.0, 2.6.0
 
 I've (ttmcmurry) been working on this one for a while. This is the result of others posting their work across various forums, reading BSD docs, and plenty of testing as a result of needing something to do while being stuck at home. :) 
 
@@ -143,8 +143,10 @@ id-assoc pd 7 { };
 
 	- For each configured interface.. 
 
+	- DHCPv6 Range of :: to ::ffff:ffff:ffff:ffff works, however feel free to set your own range.
+	
 	- DHCPv6 Server & RA -> DHCPv6 Server -> Enable -> Save 
-
+	
 	- DHCPv6 Server & RA -> Router Advertisements -> Router Mode -> Managed 
 
 	- Test a client in each configured, connected network 
