@@ -6,8 +6,8 @@
 **Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense** 
 
 Compatible Versions
-
-2.4.5, 2.5.0, 2.6.0
+pfsense - 2.4.5, 2.5.0, 2.6.0
+OpnSense - 21.x, 22.x
 
 I've (ttmcmurry) been working on this one for a while. This is the result of others posting their work across various forums, reading BSD docs, and plenty of testing as a result of needing something to do while being stuck at home. :) 
 
