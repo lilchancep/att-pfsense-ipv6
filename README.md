@@ -50,7 +50,7 @@ interface {YOUR_WAN_INTERFACE} {
 	send ia-pd 3;
 	send ia-pd 4;
 	send ia-pd 5;
-    send ia-pd 6;
+        send ia-pd 6;
 	send ia-pd 7;
 	request domain-name-servers;
 	request domain-name;
@@ -76,6 +76,7 @@ id-assoc pd 5 { };
 id-assoc pd 6 { };
 id-assoc pd 7 { };
 ``` 
+> **Note:** The `script` declaration in the above configuration may have a different path depending on the setup. For example, some systems may have the script located at `/var/etc/dhcp6c_opt4_script.sh`. Ensure that the correct file is referenced either via SSH or through `Diagnostics -> Edit File`.
 
 ## #2. Update the "interface" block on line 1
 In the config template from step #1, replace `{YOUR_WAN_INTERFACE}` with the network *port name* for the WAN interface.
@@ -83,9 +84,10 @@ In the config template from step #1, replace `{YOUR_WAN_INTERFACE}` with the net
 The network port name can be found under `Interfaces -> Assignments`.
 
 ### Example:
-SCREENSHOT HERE
+<img width="669" alt="Screenshot 2023-04-30 at 3 54 24 AM" src="https://user-images.githubusercontent.com/7748434/235344603-7f636b9f-9871-4c4d-abe5-defc7d3748b4.png">
+<img width="424" alt="Screenshot 2023-04-30 at 3 57 09 AM" src="https://user-images.githubusercontent.com/7748434/235344661-7362f08e-1c4b-4abd-9aff-5ce0e934f9fa.png">
 
-And the resulting configuration segment:
+This results in the following configuration segment:
 ```
 interface igc3 {
 	send ia-na 0;
@@ -98,9 +100,10 @@ interface igc3 {
 In the config template from step #1, replace `{YOUR_LAN_INTERFACE}` with the network *port name* for the desired LAN interface.
 
 ### Example:
-SCREENSHOT HERE
+<img width="537" alt="Screenshot 2023-04-30 at 3 59 32 AM" src="https://user-images.githubusercontent.com/7748434/235344756-a1ffb66a-1d34-43eb-b152-61c95ce70f15.png">
+<img width="331" alt="Screenshot 2023-04-30 at 4 00 36 AM" src="https://user-images.githubusercontent.com/7748434/235344784-0e934bbb-8eb8-4b44-ae47-75f1df251217.png">
 
-And the resulting configuration segment:
+This results in the following configuration segment:
 ```
 id-assoc pd 0 {
 	prefix-interface igc0 {
@@ -149,7 +152,12 @@ The `sla-id` and `sla-len` declarations are always zero (`0`).
 1. Click on the `Save` button and apply the changes
 
 **Example:**
-SCREENSHOT
+
+<img width="537" alt="Screenshot 2023-04-30 at 3 59 32 AM" src="https://user-images.githubusercontent.com/7748434/235344756-a1ffb66a-1d34-43eb-b152-61c95ce70f15.png">
+<img width="539" alt="Screenshot 2023-04-30 at 4 03 29 AM" src="https://user-images.githubusercontent.com/7748434/235344877-3e100c7f-ebbb-4abb-82b3-8035c3fc9f2c.png">
+<img width="804" alt="Screenshot 2023-04-30 at 4 06 49 AM" src="https://user-images.githubusercontent.com/7748434/235345072-f5723bbc-99a3-40b0-b050-3d7aae5f9dc1.png">
+
+> **Note:** Be sure to use the `id-assoc pd` number associated with the respective network port for the `IPv6 Prefix ID`.
 
 ## #7. Enable pfSense DHCPv6 Server
 Navigate to `Services -> DHCPv6 Server & RA`
