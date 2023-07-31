@@ -12,6 +12,10 @@
 * Motorola NVG589
 * HUMAX BGW320-500
 
+#### Known Caveats
+* [Google devices do not support DHCPv6](https://issuetracker.google.com/issues/36949085)
+	* This includes any phone running Android, TV's running Android TV or Google TV, or any Nest product (mini, hub, doorbell, etc). The solution outlined in this readme relies upon DHCPv6. Google devices will not pull a routable GUA (Global Unicast Address), but instead attempt to communicate over the local network via ULAs (Unique Local Address).
+
 All credit goes to the user **ttmcmurry** from the [Netgate Forum](https://forum.netgate.com/) for his insight within the [thread](https://forum.netgate.com/topic/153288/multiple-ipv6-prefix-delegation-over-at-t-residential-gateway-for-pfsense-2-4-5) for which all of this was discussed.
 
 > I've been working on this one for a while. This is the result of others posting their work across various forums, reading BSD docs, and plenty of testing as a result of needing something to do while being stuck at home. :) 
