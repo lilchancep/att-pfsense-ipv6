@@ -1,18 +1,29 @@
 # Multiple IPv6 Prefix Delegation over AT&amp;T Residential Gateway for pfSense/opnSense
 
-#### Known Compatible Versions
+### Known Compatible Versions
+
 * pfsense (community veresion) - 2.4.5, 2.5.0, 2.6.0
-* pfSense+ - 23.01-RELEASE
+* pfSense+ - 23.01 - 23.09
 * OPNsense - 21.x, 22.x
 
-#### Known working residential gateways (RGs)
+### Known Kea DHCP Issues
+
+As of [pfSense 23.09](https://docs.netgate.com/pfsense/en/latest/releases/23-09.html), Kea DHCP is being pushed as the suggested default for DHCP needs. Kea DHCP works out-of-the-box with this guide. There is some instability with Kea around IPv6 that may prevent the kea-dhcp6 service from starting. For example, the following error message may appear:
+
+> DHCP6_INIT_FAIL failed to initialize Kea server: configuration error using file '/usr/local/etc/kea/kea-dhcp6.conf': cannot lock socket lockfile, /tmp/kea6-ctrl-socket.lock, : Resource temporarily unavailable
+
+This can be corrected by deleting the offending `/tmp/kea6-ctrl-socket.lock` file and restarting the service via `Services -> DHCPv6 Server`.
+
+### Known working residential gateways (RGs)
+
 * Pace 5268AC
 * Arris NVG599
 * Arris BGW210-700
 * Motorola NVG589
 * HUMAX BGW320-500
 
-#### Known Caveats
+### Known Caveats
+
 * [Google devices do not support DHCPv6](https://issuetracker.google.com/issues/36949085)
 	* This includes any phone running Android, TV's running Android TV or Google TV, or any Nest product (mini, hub, doorbell, etc). The solution outlined in this readme relies upon DHCPv6. Google devices will not pull a routable GUA (Global Unicast Address), but instead attempt to communicate over the local network via ULAs (Unique Local Address).
 
@@ -32,19 +43,23 @@ All credit goes to the user **ttmcmurry** from the [Netgate Forum](https://forum
 
 <br/>
 
-# pfSense/OPNsense Configuration Steps
+## pfSense/OPNsense Configuration Steps
 
 > **Note:** It is assumed that the `WAN` interface is named "WAN" throughout this guide. If it has a different name in your setup, that is ok. Substitute your `WAN` interface name where applicable throughout this guide.
 
-## #0. Validate Initial Conditions
+### #0. Validate Initial Conditions
+
 1. The WAN interface IPv6 Configuration type is configured for "none"
 1. The WAN interface IPv6 DHCP6 Client Option "Do not allow PD/Address release" is UNCHECKED 
 	* This checkbox may not be present on some installs
 1. The LAN/OPT interfaces' DHCP6 option is set to "none" 
 1. DHCPv6 Server & RA -> DHCP6 Server -> Disabled 
-1. DHCPv6 Server & RA -> Router Advertisements -> Defaults
+1. Services -> Router Advertisement -> Defaults
 
-## #1. Create a local copy of the following config template
+> **Note:** Prior to pfSense 23.09, Router Advertisement was found under `DHCPv6 Server & RA -> Router Advertisements`
+
+### #1. Create a local copy of the following config template
+
 ```
 interface {YOUR_WAN_INTERFACE} {
 	send ia-na 0;
@@ -82,12 +97,14 @@ id-assoc pd 7 { };
 ``` 
 > **Note:** The `script` declaration in the above configuration may have a different path depending on the setup. For example, some systems may have the script located at `/var/etc/dhcp6c_opt4_script.sh`. Ensure that the correct file is referenced either via SSH or through `Diagnostics -> Edit File`.
 
-## #2. Update the "interface" block on line 1
+### #2. Update the "interface" block on line 1
+
 In the config template from step #1, replace `{YOUR_WAN_INTERFACE}` with the network *port name* for the WAN interface.
 
 The network port name can be found under `Interfaces -> Assignments`.
 
-### Example:
+#### Example:
+
 <img width="669" alt="Screenshot 2023-04-30 at 3 54 24 AM" src="https://user-images.githubusercontent.com/7748434/235344603-7f636b9f-9871-4c4d-abe5-defc7d3748b4.png">
 <img width="424" alt="Screenshot 2023-04-30 at 3 57 09 AM" src="https://user-images.githubusercontent.com/7748434/235344661-7362f08e-1c4b-4abd-9aff-5ce0e934f9fa.png">
 
@@ -100,10 +117,12 @@ interface igc3 {
 ```
 > IA-NA Note: The IA-NA is an arbitrary number. A unique number must be chosen for each device connected to the AT&T residential gateway (RG) which will request a prefix 	delegation from the RG. If only one device will be requesting PDs from the RG (i.e. this pfSense firewall), then "ia-na 0" is fine. 
 
-## #3. Update the "ia-pd" declarations
+### #3. Update the "ia-pd" declarations
+
 In the config template from step #1, replace `{YOUR_LAN_INTERFACE}` with the network *port name* for the desired LAN interface.
 
-### Example:
+#### Example:
+
 <img width="537" alt="Screenshot 2023-04-30 at 3 59 32 AM" src="https://user-images.githubusercontent.com/7748434/235344756-a1ffb66a-1d34-43eb-b152-61c95ce70f15.png">
 <img width="331" alt="Screenshot 2023-04-30 at 4 00 36 AM" src="https://user-images.githubusercontent.com/7748434/235344784-0e934bbb-8eb8-4b44-ae47-75f1df251217.png">
 
@@ -130,14 +149,16 @@ The `sla-id` and `sla-len` declarations are always zero (`0`).
 > * Pace 5268AC first assigns F then decrements to 8 to PD 0-7, i.e. PD0 = ::xxxF::/64 
 > * Arris BGW210-700 first assigns 8 then increments to F to PD 0-7, i.e. PD0 = ::xxx8::/64 
 
-## #4. Add the script to pfSense
+### #4. Add the script to pfSense
+
 * Create this file on pfSense under `Diagnostics -> Edit File`. 
 * In the grey filename box, enter /usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf.
 	* Ensure there is no trailing space in the filename.
 * Copy and paste your edited script into the text window.
 * Click the `Save` button
 
-## #5. Edit the WAN interface
+### #5. Edit the WAN interface
+
 1. Navigate to `Interfaces -> WAN`
 1. Set the IPv6 Configuration Type to `DHCP6`
 1. Under the `DHCP6 Client Configuration` section, check the `Advanced Configuration` box
@@ -149,7 +170,8 @@ The `sla-id` and `sla-len` declarations are always zero (`0`).
 	* i.e., `/usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf `
 1. Click the `Save` button and apply the changes
 
-## #6. Edit the LAN/OPT interface(s), one at a time 
+### #6. Edit the LAN/OPT interface(s), one at a time
+
 1. Under `General Configuration`, set the `IPv6 Configuration Type` to `Track Interface`
 1. Under `Track IPv6 Interface`, set the `IPv6 Interface` to the `WAN` interface name
 1. Set the `IPv6 Prefix ID` to the correlated PD number configured in the configuration file from earlier
@@ -163,10 +185,12 @@ The `sla-id` and `sla-len` declarations are always zero (`0`).
 
 > **Note:** Be sure to use the `id-assoc pd` number associated with the respective network port for the `IPv6 Prefix ID`.
 
-## #7. Enable pfSense DHCPv6 Server
+### #7. Enable pfSense DHCPv6 Server
+
 Navigate to `Services -> DHCPv6 Server & RA`
 
 #### Perform the following actions for each interface:
+
 * Within the `DHCPv6 Server` tab
 	* Locate the `DHCPv6 Options` section
 		* Check the `DHCPv6 Server`  
@@ -174,18 +198,18 @@ Navigate to `Services -> DHCPv6 Server & RA`
 			* i.e., `::` to `::ffff:ffff:ffff:ffff`
 		* Set the `Prefix Delegation Size` to `64`
 	* Click the `Save` button
-* Within the `Router Advertisements` tab
-	* Locate the `Advertisements` section
-		* Set the `Router Mode` to `Managed`
+* Within `Services -> Router Advertisement`
+	* Set the `Router Mode` to `Managed`
 	* Click the `Save` button
+
+> **Note:** Prior to pfSense 23.09, Router Advertisement was found under `DHCPv6 Server & RA -> Router Advertisements`
 
 > **Note:** After applying these settings, it may take several minutes for IPv6 addresses to start populating approprately. 
 
 If all has gone well, IPv6 should now be working.
 
-<br/>
+## State Limits
 
-# State Limits
 AT&T Residential gateways have a state table that is far smaller than pfSense's defaults, which can result in problems once the RG begins tracking more states than available. pfSense should be set to never go above that limit. pfSense will adjust how states are managed based on its default adaptive algorithm from "Firewall Adaptive Timeouts." There is no need to adjust pfSense default Adaptive Timeout behavior, only the maximum number of states pfSesnse can use.
 
 The values below are from known hardware & firmware capabilities. Depending on the # of devices directly plugged into the RG, like U-Verse set-top-boxes and devices NOT behind pfSense, you may need to adjust pfSense's maximum states downward. This information can be found on the RG under `Settings -> Diagnostics -> NAT`.
