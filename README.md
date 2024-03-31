@@ -21,6 +21,7 @@ This can be corrected by deleting the offending `/tmp/kea6-ctrl-socket.lock` fil
 * Arris BGW210-700
 * Motorola NVG589
 * HUMAX BGW320-500
+* HUMAX BGW320-505
 
 ### Known Caveats
 
