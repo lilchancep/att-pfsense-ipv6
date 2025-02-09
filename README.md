@@ -21,11 +21,12 @@ This can be corrected by deleting the offending `/tmp/kea6-ctrl-socket.lock` fil
 * Arris BGW210-700
 * Motorola NVG589
 * HUMAX BGW320-500
+* HUMAX BGW320-505
 
 ### Known Caveats
 
-* [Google devices do not support DHCPv6](https://issuetracker.google.com/issues/36949085)
-	* This includes any phone running Android, TV's running Android TV or Google TV, or any Nest product (mini, hub, doorbell, etc). The solution outlined in this readme relies upon DHCPv6. Google devices will not pull a routable GUA (Global Unicast Address), but instead attempt to communicate over the local network via ULAs (Unique Local Address).
+* [Google devices do not support _managed_ DHCPv6](https://issuetracker.google.com/issues/36949085)
+	* This includes any phone running Android, TV's running Android TV or Google TV, or any Nest product (mini, hub, doorbell, etc). The solution outlined in this readme relies upon DHCPv6. Google devices will not pull a routable GUA (Global Unicast Address), but instead attempt to communicate over the local network via ULAs (Unique Local Address). In order to get Google devices to pull a GUA, the subnet's "Router Mode" (set via Router Advertisement configuration page) will need to be set to either "unmanaged" or "stateless" in order to leverage SLAAC.
 
 All credit goes to the user **ttmcmurry** from the [Netgate Forum](https://forum.netgate.com/) for his insight within the [thread](https://forum.netgate.com/topic/153288/multiple-ipv6-prefix-delegation-over-at-t-residential-gateway-for-pfsense-2-4-5) for which all of this was discussed.
 
@@ -53,7 +54,6 @@ All credit goes to the user **ttmcmurry** from the [Netgate Forum](https://forum
 1. The WAN interface IPv6 DHCP6 Client Option "Do not allow PD/Address release" is UNCHECKED 
 	* This checkbox may not be present on some installs
 1. The LAN/OPT interfaces' DHCP6 option is set to "none" 
-1. DHCPv6 Server & RA -> DHCP6 Server -> Disabled 
 1. Services -> Router Advertisement -> Defaults
 
 > **Note:** Prior to pfSense 23.09, Router Advertisement was found under `DHCPv6 Server & RA -> Router Advertisements`
@@ -62,7 +62,8 @@ All credit goes to the user **ttmcmurry** from the [Netgate Forum](https://forum
 
 ```
 interface {YOUR_WAN_INTERFACE} {
-	send ia-na 0;
+	# Enable ia-na if you want WAN to be given a prefix delegation
+	# send ia-na 0; 
 	send ia-pd 0;
 	send ia-pd 1;
 	send ia-pd 2;
@@ -75,7 +76,8 @@ interface {YOUR_WAN_INTERFACE} {
 	request domain-name;
 	script "/var/etc/dhcp6c_wan_script.sh";
 };
-id-assoc na 0 { };
+# Enable ia-na if you want WAN to be given a prefix delegation
+# id-assoc na 0 { };
 id-assoc pd 0 {
 	prefix-interface {YOUR_LAN_INTERFACE} {
 		sla-id 0;
@@ -165,7 +167,7 @@ The `sla-id` and `sla-len` declarations are always zero (`0`).
 	* Ensure that the `Configuration Override` checkbox is unchecked during this portion, as having that box checked will hide UI elements that need to be accessed.
 1. Ensure all other check boxes in this section are unchecked.
 1. Set the `DHCPv6 Prefix Delegation size` to `60`
-1. Re-check the `Advanced Configuration` checkbox
+1. Re-check the `Configuration Override` checkbox
 1. Enter the path of the configuration override file from earlier into the `Configuration File Override` text box.
 	* i.e., `/usr/local/etc/rc.d/att-rg-dhcpv6-pd.conf `
 1. Click the `Save` button and apply the changes
@@ -219,6 +221,7 @@ The values below are from known hardware & firmware capabilities. Depending on t
 * **Arris BGW210-700** - Firmware 1.9.16 - 8000 states max - Set pfSense to 7500 states
 * **Motorola NVG589** - Firmware ? - 8192 states max - Set pfSense to 7600 states
 * **HUMAX BGW320-500** - Firmware 2.10.6 - 8192 states max - Set pfSense to 7600
+* **HUMAX BGW320-505** - Firmware ? - 8192 states max - Set pfSense to 7600
 
 Set the pfSense state limit in `Advanced -> Firewall & NAT -> Firewall Maximum States`
 
